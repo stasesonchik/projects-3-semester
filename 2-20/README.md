@@ -1,96 +1,59 @@
+NER Highlighter
 
-# NER Highlight Visualization
+Описание:
+Модуль для распознавания именованных сущностей (NER) в тексте и визуализации их с подсветкой цветов.
+Подходит для демонстрации работы NER на любом английском тексте.
 
-## Описание
-Этот проект позволяет визуализировать результаты **Named Entity Recognition (NER)**, раскрашивая сущности в тексте в разные цвета в зависимости от их типа.  
-Используется модель \`dslim/bert-base-NER\` от Hugging Face.
+Пример типов сущностей и цветов по умолчанию:
+- PERSON (PER) — синий
+- LOCATION (LOC) — красный
+- ORGANIZATION (ORG) — зелёный
+- MISC (MISC) — фиолетовый
 
-Пример:  
-- PERSON — синий  
-- LOCATION — красный  
-- ORGANIZATION — зелёный  
-- MISC — фиолетовый  
+Установка:
 
----
-
-## Установка
-
-1. Склонируйте репозиторий (если есть) или создайте проект локально.
-2. Установите зависимости:
-
-\`\`\`bash
 pip install transformers torch ipython
-\`\`\`
 
-> Рекомендуется использовать Jupyter Notebook для визуализации HTML.
+Рекомендуется использовать Jupyter Notebook для отображения HTML с подсветкой.
 
----
+Использование:
 
-## Использование
+from ner_highlighter import create_ner_pipeline, display_highlighted_text
 
-1. Импортируйте необходимые библиотеки:
+# Создаём пайплайн NER
+ner_pipeline = create_ner_pipeline()
 
-\`\`\`python
-from transformers import pipeline
-from IPython.display import display, HTML
-\`\`\`
+# Текст для анализа
+text = """
+Alice and Bob traveled from New York to Paris last summer. 
+They visited the Louvre and met with representatives from UNESCO.
+"""
 
-2. Создайте пайплайн NER:
+# Отображаем подсветку
+display_highlighted_text(text, ner_pipeline)
 
-\`\`\`python
-ner_pipeline = pipeline("ner", model="dslim/bert-base-NER", grouped_entities=True)
-\`\`\`
+Функции модуля:
 
-3. Определите текст для анализа:
+1. create_ner_pipeline(model_name: str = "dslim/bert-base-NER")
+   Создает пайплайн HuggingFace для NER.
 
-\`\`\`python
-text = "Barack Obama was born in Hawaii and worked at the White House."
-entities = ner_pipeline(text)
-\`\`\`
+2. highlight_entities(text: str, entities: List[Dict], colors: Dict[str, str] = None) -> str
+   Подсвечивает сущности HTML-тегами, возвращает готовый HTML.
 
-4. Определите цветовую карту для типов сущностей:
+3. display_highlighted_text(text: str, ner_pipe: pipeline, colors: Dict[str, str] = None)
+   Выполняет NER на тексте и отображает результат в Jupyter.
 
-\`\`\`python
-colors = {
-    "PER": "blue",
-    "LOC": "red",
-    "ORG": "green",
-    "MISC": "purple"
-}
-\`\`\`
+Настройки:
 
-5. Используйте функцию для визуализации:
+- Цвета можно менять через словарь colors при вызове функций.
+- Можно использовать любую предобученную модель HuggingFace для NER.
+- Работает с любым английским текстом.
 
-\`\`\`python
-def highlight_entities(text, entities):
-    html_text = ""
-    last_idx = 0
-    for ent in entities:
-        start, end = ent['start'], ent['end']
-        entity_type = ent['entity_group']
-        color = colors.get(entity_type, "black")
-        html_text += text[last_idx:start]
-        html_text += f'<span style="color:{color}; font-weight:bold">{text[start:end]}</span>'
-        last_idx = end
-    html_text += text[last_idx:]
-    return html_text
+Пример визуализации:
 
-html_output = highlight_entities(text, entities)
-display(HTML(html_output))
-\`\`\`
+После выполнения кода в Jupyter Notebook текст будет подсвечен цветами по типу сущностей:
 
----
-
-## Пример вывода
-
-![Пример подсветки](example.png)  
-*Barack Obama* — синий (PERSON), *Hawaii* — красный (LOC), *White House* — зелёный (ORG)
-
----
-
-## Настройки
-
-- Можно менять цвета сущностей в словаре \`colors\`.
-- Любой текст можно подставлять вместо примера.
-- Подходит для использования в Jupyter Notebook или сохранения в HTML файл.
-
+- Alice, Bob → PERSON (синий)
+- New York, Paris → LOC (красный)
+- Louvre, UNESCO → ORG (зелёный)
+- Coldplay → MISC (фиолетовый)
