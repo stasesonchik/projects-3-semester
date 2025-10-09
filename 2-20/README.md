@@ -1,9 +1,8 @@
-cat <<EOF > README.txt
 NER Highlighter
 
 Описание:
 Модуль для распознавания именованных сущностей (NER) в тексте и визуализации их с подсветкой цветов.
-Позволяет как отображать результат в Jupyter Notebook, так и сохранять в HTML-файл.
+Подходит для демонстрации работы NER на любом английском тексте.
 
 Пример типов сущностей и цветов по умолчанию:
 - PERSON (PER) — синий
@@ -12,56 +11,75 @@ NER Highlighter
 - MISC (MISC) — фиолетовый
 
 Установка:
-
 pip install transformers torch ipython
 
-Рекомендуется использовать Jupyter Notebook для отображения HTML с подсветкой, но модуль работает и в стандартном Python.
+Рекомендуется использовать Jupyter Notebook или JupyterLab для отображения подсветки через HTML.
 
-Использование:
+Функционал:
+- Распознавание сущностей в тексте с помощью NER модели HuggingFace.
+- Подсветка сущностей цветом для наглядной визуализации.
+- Сохранение результата в HTML для использования вне Jupyter.
+- Возможность настройки цветов и модели.
 
-from ner_highlighter import create_ner_pipeline, display_highlighted_text, save_highlighted_html
+Основные функции модуля:
 
-# Создаём пайплайн NER
+1. create_ner_pipeline(model_name: str = "dslim/bert-base-NER")
+   Создает пайплайн HuggingFace для NER.
+
+2. highlight_entities(text: str, entities: List[Dict], colors: Dict[str, str] = None) -> str
+   Подсвечивает сущности HTML-тегами, возвращает готовый HTML.
+
+3. display_highlighted_text(text: str, ner_pipe: pipeline, colors: Dict[str, str] = None)
+   Выполняет NER на тексте и отображает результат в Jupyter.
+
+Сохранение результата в HTML:
+html_text = highlight_entities(text, entities, colors)
+with open("output.html", "w", encoding="utf-8") as f:
+    f.write(html_text)
+
+Пример использования:
+
+from ner_highlighter import create_ner_pipeline, display_highlighted_text, highlight_entities
+
+# Создаём пайплайн
 ner_pipeline = create_ner_pipeline()
 
-# Текст для анализа
+# Пример текста для анализа
 text = """
 Alice and Bob traveled from New York to Paris last summer. 
 They visited the Louvre and met with representatives from UNESCO.
 """
 
-# Отображаем подсветку в Jupyter
+# Отображение в Jupyter
 display_highlighted_text(text, ner_pipeline)
 
-# Сохраняем результат в HTML
-save_highlighted_html(text, ner_pipeline, "output.html")
+# Сохранение в HTML
+entities = ner_pipeline(text)
+html_text = highlight_entities(text, entities)
+with open("output.html", "w", encoding="utf-8") as f:
+    f.write(html_text)
 
-Функции модуля:
-
-1. create_ner_pipeline(model_name: str = "dslim/bert-base-NER")
-   Создает предобученный пайплайн HuggingFace для NER.
-
-2. highlight_entities(text: str, entities: List[Dict], colors: Dict[str, str] = None) -> str
-   Подсвечивает сущности HTML-тегами.
-
-3. display_highlighted_text(text: str, ner_pipe: pipeline, colors: Dict[str, str] = None)
-   Выполняет NER на тексте и отображает результат с подсветкой в Jupyter Notebook.
-
-4. save_highlighted_html(text: str, ner_pipe: pipeline, file_path: str, colors: Dict[str, str] = None)
-   Выполняет NER и сохраняет результат в HTML-файл.
-
-Настройки:
-
-- Цвета можно менять через словарь colors.
-- Можно использовать любую предобученную модель HuggingFace.
-- Подходит для любых английских текстов.
+Настройки и адаптация:
+- Цвета можно изменить через словарь colors при вызове функций.
+- Модель NER можно заменить любой другой предобученной моделью HuggingFace.
+- Входные данные — любой текст на английском языке.
+- Выходные данные — HTML-строка или отображение в Jupyter.
 
 Пример визуализации:
-
-После выполнения кода в Jupyter Notebook текст будет подсвечен цветами по типу сущностей:
-
 - Alice, Bob → PERSON (синий)
 - New York, Paris → LOC (красный)
 - Louvre, UNESCO → ORG (зелёный)
 - Coldplay → MISC (фиолетовый)
-EOF
+
+Преимущества:
+- Легко адаптируется под разные тексты и модели.
+- Модульный и параметризуемый код.
+- Возможность использовать как визуализацию в Jupyter, так и сохранять HTML.
+- Надёжная обработка ошибок и некорректных данных.
+
+Требования:
+- Python 3.8+
+- transformers
+- torch
+- ipython
+- Совместимость с Windows, Mac и Linux
