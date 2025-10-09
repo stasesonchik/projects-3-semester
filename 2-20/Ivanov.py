@@ -6,6 +6,17 @@ from IPython.display import display, HTML
 
 # 1. Текст для анализа
 text = """
+Alice and Bob traveled from New York to Paris last summer. 
+They visited the Louvre and met with representatives from UNESCO. 
+Later, they attended a concert by Coldplay at the Stade de France. 
+Alice said she loved the croissants, while Bob preferred the local cheese. 
+Their friend Charlie joined them for a short trip to Montmartre. 
+By the end of their journey, they promised to return next spring.
+"""
+
+# текст на подумать 
+
+text2 = """
 – Hey, uncle, what time is it?
 – Nineteen, five to.
 – Are those boilers some kind of general’s gear or what?
@@ -17,6 +28,7 @@ text = """
 – Swap.
 – I give you a cigarette. You give me the boilers.
 """
+
 # 2. Создание пайплайна NER с новой стратегией агрегации
 ner_pipeline = pipeline(
     "ner",
