@@ -1,10 +1,4 @@
-#!/bin/bash
 
-# Имя файла
-README_FILE="README.md"
-
-# Содержимое README
-cat > $README_FILE <<EOL
 # NER Highlight Visualization
 
 ## Описание
@@ -99,6 +93,4 @@ display(HTML(html_output))
 - Можно менять цвета сущностей в словаре \`colors\`.
 - Любой текст можно подставлять вместо примера.
 - Подходит для использования в Jupyter Notebook или сохранения в HTML файл.
-EOL
 
-echo "README.md успешно создан!"
