@@ -115,8 +115,11 @@
 ## Установка
 
 1. Клонируйте репозиторий:
-```bash
 git clone <your-repo-url>
 cd <repo-folder>
 
-##Установите зависимости
+## 2 Установите зависимости:
+pip install pandas numpy matplotlib
+
+## 3 Использование
+python main.py -n 60 -w 3 5 7 -t 50 -o output --format png
